@@ -1,0 +1,63 @@
+package com.example.previsodotempoapp.presentation
+
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.previsodotempoapp.domain.location.LocationTracker
+import com.example.previsodotempoapp.domain.repository.WeatherRepository
+import com.example.previsodotempoapp.domain.util.Resource
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@HiltViewModel
+class WeatherViewModel @Inject constructor(
+    private val repository: WeatherRepository,
+    private val locationTracker: LocationTracker
+) : ViewModel() {
+
+    //instanciando o state
+    var state by mutableStateOf(WeatherState())
+        private set
+
+    //chamar a API e obter a localização e combinará em u mestado
+    fun loadWeatherInfo() {
+        viewModelScope.launch {
+            state = state.copy(
+                isLoading = true,
+                error = null
+            )
+            //recuperando a localização, se tivermos - fazer o request
+            locationTracker.getCurrentLocation()?.let { location ->
+                when (val result =
+                    repository.getWeatherData(location.latitude, location.longitude)) {
+                    is Resource.Success -> {
+                        state = state.copy(
+                            weatherInfo = result.data,
+                            isLoading = false,
+                            error = null
+                        )
+                    }
+                    is Resource.Error -> {
+                        state = state.copy(
+                            weatherInfo = null,
+                            isLoading = false,
+                            error = result.message
+                        )
+
+                    }
+                }
+// se não obtivermos um local
+            } ?: kotlin.run {
+                state= state.copy(
+                    isLoading = false,
+                    error = "Couldn't retrieve location. Make sure to grant permission and enable GPS"
+
+                )
+            }
+
+        }
+    }
+}

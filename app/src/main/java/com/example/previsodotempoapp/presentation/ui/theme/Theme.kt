@@ -1,4 +1,4 @@
-package com.example.previsodotempoapp.ui.theme
+package com.example.previsodotempoapp.presentation.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
