@@ -9,10 +9,12 @@ import android.location.LocationManager
 import androidx.core.content.ContextCompat
 import com.example.previsodotempoapp.domain.location.LocationTracker
 import com.google.android.gms.location.FusedLocationProviderClient
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
 import kotlin.coroutines.resume
 
+@ExperimentalCoroutinesApi
 class DefaultLocationTracker @Inject constructor(
     //dependencia que inclímos e dos contatos para verificar permissões
     private val locationClient: FusedLocationProviderClient,
