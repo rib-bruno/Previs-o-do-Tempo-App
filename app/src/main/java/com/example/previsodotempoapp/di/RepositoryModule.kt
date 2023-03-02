@@ -3,6 +3,7 @@ package com.example.previsodotempoapp.di
 import android.app.Application
 import com.example.previsodotempoapp.data.remote.WeatherApi
 import com.example.previsodotempoapp.data.repository.WeatherRepositoryImpl
+import com.example.previsodotempoapp.domain.repository.WeatherRepository
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import dagger.Binds
@@ -24,5 +25,5 @@ abstract class RepositoryModule {
     @Singleton
   abstract  fun bindWeatherRepository(
         weatherRepositoryImpl: WeatherRepositoryImpl
-    ) : RepositoryModule
+    ) : WeatherRepository
 }
